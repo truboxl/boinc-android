@@ -3,8 +3,8 @@ echo '===== Prepare sources start ====='
 
 echo 'Preparing OpenSSL sources'
 #git clone 'https://github.com/openssl/openssl' # OpenSSL 3 is broken for Android
-curl -#OC - 'https://www.openssl.org/source/openssl-1.1.1f.tar.gz'
-tar xf openssl-1.1.1f.tar.gz
+curl -#OC - 'https://www.openssl.org/source/openssl-1.1.1g.tar.gz'
+tar xf openssl-1.1.1g.tar.gz
 
 echo 'Preparing cURL sources'
 #git clone 'https://github.com/curl/curl'
