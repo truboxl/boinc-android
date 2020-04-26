@@ -143,9 +143,6 @@ if [ "$VERBOSE" = '1' ]; then
         uniq -u env2 env1
     fi
 fi
-if [ "x`grep 'unset' env1`" = 'x' ]; then
-    . ./env1
-fi
 
 # Check path
 if [ ! -d "$NDK" ]; then
