@@ -135,7 +135,7 @@ export BOINC_ARGS="--host=$TARGET --with-boinc-platform=$BOINC_PLATFORM $BOINC_P
 
 # echo
 if [ "$VERBOSE" = '1' ]; then
-    grep 'export' set_env.sh | sed -e 's/    //g' | sed -e 's/grep.*//g' | sed -e 's/export //g' | sed -e 's/OLDPATH.*//g' | sed -e 's/PATH.*//g' | sed -e 's/=.*//g' | sort | uniq -u | sed -e 's/.*/echo &=$&/g' > env1
+    grep '^export' set_env.sh | sed -e 's/    //g' | sed -e 's/grep.*//g' | sed -e 's/export //g' | sed -e 's/OLDPATH.*//g' | sed -e 's/PATH.*//g' | sed -e 's/=.*//g' | sort | uniq -u | sed -e 's/.*/echo &=$&/g' > env1
     if true; then # set true to ignore certain parts
         sed -i env1 -e 's/echo .*ARGS.*//g'
         sed -i env1 -e 's/echo ANDROID_NDK.*//g'
