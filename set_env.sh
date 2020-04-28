@@ -115,7 +115,7 @@ case "$ARCH" in
     'x86_64')
         export BOINC_PLATFORM='x86_64-android-linux-gnu'
         export BOINC_PLATFORM_ALT='--with-boinc-alt-platform=x86-android-linux-gnu'
-        export BOINC_ARGS_EXTRA='--disable-largefile'
+        export BOINC_ARGS_EXTRA=''
         ;;
     'x86')
         export BOINC_PLATFORM='x86-android-linux-gnu'
