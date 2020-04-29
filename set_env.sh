@@ -62,9 +62,9 @@ fi
 
 # minSdkVersion
 # API 23    6.0 fix stderr stdin stdout undefined in OpenSSL / cURL
-# API 21    5.0 support 64bit
+# API 21    5.0 support 64bit / mandate PIE
 # API 19    4.4 fix sys/swap.h
-# API 16    4.1 mandate PIE
+# API 16    4.1 lowest version to run PIE
 export API="${API:-21}"
 
 # Compile
