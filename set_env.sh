@@ -148,6 +148,7 @@ if [ "$VERBOSE" = '1' ]; then
         sort env1 > env2
         uniq -u env2 env1
     fi
+    . ./env1
 fi
 
 # Check path
