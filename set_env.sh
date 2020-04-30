@@ -88,6 +88,8 @@ if [ "$ARCH" = 'arm' ]; then
     export CXX="armv7a-linux-androideabi$API-clang++"
 fi
 export LD="$TARGET-ld$EXT"
+export NM="$TARGET-nm$EXT"
+export OBJDUMP="$TARGET-objdump$EXT"
 export RANLIB="$TARGET-ranlib$EXT"
 export STRIP="$TARGET-strip$EXT"
 export SYSROOT="$TOOLCHAIN/sysroot"
