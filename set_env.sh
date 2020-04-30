@@ -23,21 +23,19 @@ export ANDROID_NDK_HOME="$NDK" # Used by OpenSSL 1.1
 # Linux             linux-x86_64
 # 32-bit Windows    windows
 # 64-bit Windows    windows-x86_64
-case "`uname`" in
-
+case "$(uname)" in
     'Linux')
         export HOST_TAG='linux-x86_64'
-        ;;
-    MSYS*)
-        export HOST_TAG='windows-x86_64'
         ;;
     Darwin*)
         export HOST_TAG='darwin-x86_64'
         ;;
+    MSYS*|MINGW*)
+        export HOST_TAG='windows-x86_64'
+        ;;
     *)
         export HOST_TAG="${HOST_TAG:-linux-x86_64}"
         ;;
-
 esac
 
 # Name          arch    ABI         triple
@@ -67,23 +65,31 @@ fi
 # API 16    4.1 lowest version to run PIE
 export API="${API:-21}"
 
+# NDK command fix
+# Commands provided by NDK sometimes have different extension
+if [ "$HOST_TAG" = 'windows-x86_64' ]; then
+    export EXT='.exe'
+else
+    export EXT=''
+fi
+
 # Compile
 export TOOLCHAIN="$NDK/toolchains/llvm/prebuilt/$HOST_TAG"
 if [ -z "$OLDPATH" ]; then
     export OLDPATH="$PATH"
 fi
 export PATH="$TOOLCHAIN/bin:$PATH"
-export AR="$TARGET-ar"
-export AS="$TARGET-as"
+export AR="$TARGET-ar$EXT"
+export AS="$TARGET-as$EXT"
 export CC="$TARGET$API-clang"
 export CXX="$TARGET$API-clang++"
 if [ "$ARCH" = 'arm' ]; then
     export CC="armv7a-linux-androideabi$API-clang"
     export CXX="armv7a-linux-androideabi$API-clang++"
 fi
-export LD="$TARGET-ld"
-export RANLIB="$TARGET-ranlib"
-export STRIP="$TARGET-strip"
+export LD="$TARGET-ld$EXT"
+export RANLIB="$TARGET-ranlib$EXT"
+export STRIP="$TARGET-strip$EXT"
 export SYSROOT="$TOOLCHAIN/sysroot"
 
 # OpenSSL
@@ -101,7 +107,6 @@ export CURL_ARGS="--host=$TARGET --with-pic --disable-shared --with-ssl=$OPENSSL
 
 # BOINC
 case "$ARCH" in
-
     'aarch64')
         export BOINC_PLATFORM='aarch64-android-linux-gnu'
         export BOINC_PLATFORM_ALT='--with-boinc-alt-platform=arm-android-linux-gnu'
@@ -127,7 +132,6 @@ case "$ARCH" in
         export BOINC_PLATFORM_ALT='--with-boinc-alt-platform=unknown'
         export BOINC_ARGS_EXTRA=''
         ;;
-
 esac
 
 export BOINC_DEPS="--with-ssl=$OPENSSL_DIR  --with-libcurl=$CURL_DIR --with-sysroot=$SYSROOT"
