@@ -148,6 +148,7 @@ if [ "$VERBOSE" = '1' ]; then
         sort env1 > env2
         uniq -u env2 env1
     fi
+    sed -i env1 -e 's/echo =$.*//g'
     . ./env1
 fi
 
