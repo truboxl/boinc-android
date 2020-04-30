@@ -21,17 +21,18 @@ echo 'Preparing Android NDK'
 # and comment the lines here
 
 case "`uname`" in
-
     'Linux')
         HOST_TAG='linux-x86_64'
-        ;;
-    MSYS*)
-        HOST_TAG='windows-x86_64'
         ;;
     Darwin*)
         HOST_TAG='darwin-x86_64'
         ;;
-
+    MSYS*|MINGW*)
+        HOST_TAG='windows-x86_64'
+        ;;
+    *)
+        HOST_TAG='linux-x86_64'
+        ;;
 esac
 
 curl -#OC - "https://dl.google.com/android/repository/android-ndk-r21-$HOST_TAG.zip"
@@ -40,7 +41,9 @@ unzip -q "android-ndk-r21-$HOST_TAG.zip"
 # EXPERIMENTAL BUILD ON WINDOWS
 # Please don't go into the deep rabbit hole of building on Windows
 # You will be dealing with:
-# * clang and "C:\" instead of "/" on cmd.exe and cygwin
+# * clang using "C:\" instead of "/" under cmd.exe and cygwin
+# * some command offered with extension .exe, .cmd, or none at all
+# * hitting the command length limit: https://devblogs.microsoft.com/oldnewthing/20031210-00/?p=41553
 # * lot's of weird issues that weren't present on true Linux environment
 # * slow compiling (even with MAKEFLAGS='-j2')
 # Use VM or WSL instead
