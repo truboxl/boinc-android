@@ -1,0 +1,14 @@
+# truboxl/boinc-android
+buildcache/
+env*
+
+# Sources
+android-ndk-r*/
+boinc*/
+curl*/
+openssl*/
+
+# Archives
+*.zip
+*.tar*
+
