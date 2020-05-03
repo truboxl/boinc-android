@@ -110,34 +110,34 @@ export CURL_ARGS="--host=$TARGET --with-pic --disable-shared --with-ssl=$OPENSSL
 # BOINC
 case "$ARCH" in
     'aarch64')
-        export BOINC_PLATFORM='aarch64-android-linux-gnu'
-        export BOINC_PLATFORM_ALT='--with-boinc-alt-platform=arm-android-linux-gnu'
+        #export BOINC_PLATFORM='--with-boinc-platform=aarch64-android-linux-gnu'
+        #export BOINC_ALT_PLATFORM='--with-boinc-alt-platform=arm-android-linux-gnu'
         export BOINC_ARGS_EXTRA=''
         ;;
     'arm')
-        export BOINC_PLATFORM='arm-android-linux-gnu'
-        export BOINC_PLATFORM_ALT=''
+        #export BOINC_PLATFORM='--with-boinc-platform=arm-android-linux-gnu'
+        #export BOINC_ALT_PLATFORM=''
         export BOINC_ARGS_EXTRA='--disable-largefile'
         ;;
     'x86_64')
-        export BOINC_PLATFORM='x86_64-android-linux-gnu'
-        export BOINC_PLATFORM_ALT='--with-boinc-alt-platform=x86-android-linux-gnu'
+        #export BOINC_PLATFORM='--with-boinc-platform=x86_64-android-linux-gnu'
+        #export BOINC_ALT_PLATFORM='--with-boinc-alt-platform=x86-android-linux-gnu'
         export BOINC_ARGS_EXTRA=''
         ;;
     'x86')
-        export BOINC_PLATFORM='x86-android-linux-gnu'
-        export BOINC_PLATFORM_ALT=''
+        #export BOINC_PLATFORM='--with-boinc-platform=x86-android-linux-gnu'
+        #export BOINC_ALT_PLATFORM=''
         export BOINC_ARGS_EXTRA='--disable-largefile'
         ;;
     *)
-        export BOINC_PLATFORM='unknown'
-        export BOINC_PLATFORM_ALT='--with-boinc-alt-platform=unknown'
+        export BOINC_PLATFORM='--with-boinc-platform=unknown'
+        export BOINC_ALT_PLATFORM='--with-boinc-alt-platform=unknown'
         export BOINC_ARGS_EXTRA=''
         ;;
 esac
 
 export BOINC_DEPS="--with-ssl=$OPENSSL_DIR  --with-libcurl=$CURL_DIR --with-sysroot=$SYSROOT"
-export BOINC_ARGS="--host=$TARGET --with-boinc-platform=$BOINC_PLATFORM $BOINC_PLATFORM_ALT --disable-server --disable-manager --disable-shared --enable-static $BOINC_DEPS $BOINC_ARGS_EXTRA"
+export BOINC_ARGS="--host=$TARGET $BOINC_PLATFORM $BOINC_ALT_PLATFORM --disable-server --disable-manager --disable-shared --enable-static $BOINC_DEPS $BOINC_ARGS_EXTRA"
 
 # echo
 if [ "$VERBOSE" = '1' ]; then
