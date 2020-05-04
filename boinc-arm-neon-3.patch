@@ -1,3 +1,29 @@
+diff --git a/client/Makefile.am b/client/Makefile.am
+index 0b33f52eb..ce7c959e9 100644
+--- a/client/Makefile.am
++++ b/client/Makefile.am
+@@ -132,7 +132,7 @@ EXTRA_boinc_client_DEPENDENCIES = libwhetneon.a
+ boinc_client_LDADD += libwhetneon.a
+ noinst_LIBRARIES = libwhetneon.a
+ libwhetneon_a_SOURCES = whetstone.cpp
+-libwhetneon_a_CXXFLAGS = $(boinc_client_CXXFLAGS) -DARM_NEON -mfpu=neon
++libwhetneon_a_CXXFLAGS = $(boinc_client_CXXFLAGS) -DARM_NEON
+ endif
+ 
+ switcher_SOURCES = switcher.cpp
+diff --git a/client/cpu_benchmark.h b/client/cpu_benchmark.h
+index a085a5d42..b1e62d135 100644
+--- a/client/cpu_benchmark.h
++++ b/client/cpu_benchmark.h
+@@ -36,7 +36,7 @@ extern bool benchmark_time_to_stop(int which);
+ //          -DARM_VFP -mfloat-abi=softfp -mfpu=vfp
+ // armhf  : -DARM_NEON -march=armv7-a -mfloat-abi=hard -mfpu=neon
+ //          -DARM_VFP -march=armv7-a -mfloat-abi=hard -mfpu=vfp
+-// aarch64: -DARM_NEON -mfpu=neon
++// aarch64: -DARM_NEON
+ #if defined(__arm__) || defined(__aarch64__)
+ #ifdef __ARM_NEON
+ #include <arm_neon.h>
 diff --git a/configure.ac b/configure.ac
 index d64f033fb..97ce3daff 100644
 --- a/configure.ac
