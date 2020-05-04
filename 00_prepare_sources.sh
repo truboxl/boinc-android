@@ -35,8 +35,8 @@ case "`uname`" in
         ;;
 esac
 
-curl -#OC - "https://dl.google.com/android/repository/android-ndk-r21-$HOST_TAG.zip"
-unzip -q "android-ndk-r21-$HOST_TAG.zip"
+curl -#OC - "https://dl.google.com/android/repository/android-ndk-r21b-$HOST_TAG.zip"
+unzip -q "android-ndk-r21b-$HOST_TAG.zip"
 
 # EXPERIMENTAL BUILD ON WINDOWS
 # Please don't go into the deep rabbit hole of building on Windows
