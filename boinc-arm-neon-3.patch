@@ -1,0 +1,15 @@
+diff --git a/configure.ac b/configure.ac
+index d64f033fb..97ce3daff 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -1056,8 +1056,8 @@ dnl Enable NEON in benchmark
+ AM_CONDITIONAL(OS_LINUX_ARM,
+ [$(echo $host_cpu | grep '^arm' > /dev/null) && $(echo $host_os | grep '^linux' > /dev/null)])
+ AM_CONDITIONAL(OS_LINUX_ARMHF,
+-[$(echo $host_cpu | grep '^arm' > /dev/null) && $(echo $host_os | grep '^linux.*hf' > /dev/null) || \
+-$(echo $host_cpu | grep '^armv7hl' > /dev/null) && $(echo $host_os | grep '^linux' > /dev/null)])
++[$($(echo $host_cpu | grep '^arm' > /dev/null) && $(echo $host_os | grep '^linux.*hf' > /dev/null)) || \
++$($(echo $host_cpu | grep '^armv7hl' > /dev/null) && $(echo $host_os | grep '^linux' > /dev/null))])
+ AM_CONDITIONAL(OS_LINUX_AARCH64,
+ [$(echo $host_cpu | grep '^aarch64' > /dev/null) && $(echo $host_os | grep '^linux' > /dev/null)])
+ 
