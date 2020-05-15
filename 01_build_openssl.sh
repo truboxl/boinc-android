@@ -8,9 +8,14 @@ if [ ! -d "$ANDROID_NDK_ROOT" ] || [ ! -d "$ANDROID_NDK_HOME" ]; then
     exit 1
 fi
 
-echo "===== OpenSSL build for android-$ARCH_SSL start ====="
 
-cd ./openssl*/
+echo "===== OpenSSL ${OPENSSL_VER:-unknown} build for android-$ARCH_SSL start ====="
+
+if [ ! -z "$OPENSSL_VER" ]; then
+    cd "./src/openssl-$OPENSSL_VER/"
+else
+    cd ./src/openssl*/
+fi
 
 if [ -e ./Makefile ] && $(grep -q '^clean:' ./Makefile); then
     make clean -s
@@ -19,5 +24,5 @@ fi
 make -s
 make install_sw -s
 
-echo "===== OpenSSL build for android-$ARCH_SSL done ====="
+echo "===== OpenSSL ${OPENSSL_VER:-unknown} build for android-$ARCH_SSL done ====="
 exit

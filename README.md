@@ -6,6 +6,7 @@
 ### You may see a lot of errors in Android Studio
 ### BOINC for Android is still undergoing architecture overhaul
 ### See https://github.com/BOINC/boinc/issues/3561
+### The scripts may or may not work and are constantly updated
 
 ## Prerequisite
 

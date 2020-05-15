@@ -10,11 +10,16 @@
 # 
 # https://boinc.berkeley.edu/trac/wiki/BuildSystem
 
+# Sources version
+export OPENSSL_VER=1.1.1g
+export CURL_VER=7.69.1
+export NDK_VER=r21b
+
 # make
 export MAKEFLAGS="${MAKEFLAGS:--j2}"
 
 # Android NDK
-export NDK="${NDK:-$PWD/android-ndk-r21b}"
+export NDK="${NDK:-$PWD/src/android-ndk-$NDK_VER}"
 export ANDROID_NDK_ROOT="$NDK" # Used by OpenSSL 3, currently broken
 export ANDROID_NDK_HOME="$NDK" # Used by OpenSSL 1.1
 
@@ -65,33 +70,25 @@ fi
 # API 16    4.1 lowest version to run PIE
 export API="${API:-21}"
 
-# NDK command fix
-# Commands provided by NDK sometimes have different extension
-if [ "$HOST_TAG" = 'windows-x86_64' ]; then
-    export EXT='.exe'
-else
-    export EXT=''
-fi
-
 # Compile
 export TOOLCHAIN="$NDK/toolchains/llvm/prebuilt/$HOST_TAG"
 if [ -z "$OLDPATH" ]; then
     export OLDPATH="$PATH"
 fi
 export PATH="$TOOLCHAIN/bin:$PATH"
-export AR="$TARGET-ar$EXT"
-export AS="$TARGET-as$EXT"
+export AR="$TARGET-ar"
+export AS="$TARGET-as"
 export CC="$TARGET$API-clang"
 export CXX="$TARGET$API-clang++"
 if [ "$ARCH" = 'arm' ]; then
     export CC="armv7a-linux-androideabi$API-clang"
     export CXX="armv7a-linux-androideabi$API-clang++"
 fi
-export LD="$TARGET-ld$EXT"
-export NM="$TARGET-nm$EXT"
-export OBJDUMP="$TARGET-objdump$EXT"
-export RANLIB="$TARGET-ranlib$EXT"
-export STRIP="$TARGET-strip$EXT"
+export LD="$TARGET-ld"
+export NM="$TARGET-nm"
+export OBJDUMP="$TARGET-objdump"
+export RANLIB="$TARGET-ranlib"
+export STRIP="$TARGET-strip"
 export SYSROOT="$TOOLCHAIN/sysroot"
 
 # OpenSSL
@@ -103,9 +100,9 @@ else
 fi
 export OPENSSL_ARGS="android-$ARCH_SSL no-shared no-dso -D__ANDROID_API__=$API --prefix=$OPENSSL_DIR --openssldir=$OPENSSL_DIR"
 
-# cURL
+# curl
 export CURL_DIR="$PWD/buildcache/curl-$ARCH-$API"
-export CURL_ARGS="--host=$TARGET --with-pic --disable-shared --with-ssl=$OPENSSL_DIR --prefix=$CURL_DIR"
+export CURL_ARGS="--host=$TARGET --with-pic --disable-shared --with-ssl=$OPENSSL_DIR --with-sysroot=$SYSROOT --prefix=$CURL_DIR"
 
 # BOINC
 case "$ARCH" in
@@ -137,7 +134,11 @@ case "$ARCH" in
 esac
 
 export BOINC_DEPS="--with-ssl=$OPENSSL_DIR  --with-libcurl=$CURL_DIR --with-sysroot=$SYSROOT"
-export BOINC_ARGS="--host=$TARGET ${BOINC_PLATFORM} ${BOINC_ALT_PLATFORM} --disable-server --disable-manager --disable-shared --enable-static ${BOINC_DEPS} ${BOINC_ARGS_EXTRA}"
+export BOINC_ARGS="--host=$TARGET $BOINC_PLATFORM $BOINC_ALT_PLATFORM --disable-server --disable-manager --disable-shared --enable-static $BOINC_DEPS $BOINC_ARGS_EXTRA"
+if [ ! -z "$BOINC_DEBUG" ]; then
+    # Debug
+    export BOINC_ARGS="$BOINC_ARGS --enable-debug"
+fi
 
 # echo
 if [ "$VERBOSE" = '1' ]; then

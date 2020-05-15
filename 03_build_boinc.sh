@@ -22,19 +22,32 @@ if [ -z "$STRIP" ]; then
     echo 'Invalid path detected! BOINC build may fail!'
 fi
 
-echo "===== BOINC build for $TARGET ($ABI) start ====="
+echo "===== BOINC ${BOINC_VER:-unknown} build for $TARGET ($ABI) start ====="
 
-cd ./boinc*/
+if [ ! -z "$BOINC_VER" ]; then
+    cd "./src/boinc-$BOINC_VER/"
+else
+    cd ./src/boinc*/
+fi
+
 export BOINC="$PWD"
-export PATH="$OPENSSL_DIR/bin:$CURL_DIR/bin:$PATH"
 
 if [ -e ./Makefile ] && $(grep -q '^distclean:' ./Makefile); then
     make distclean -s
 fi
 
 # Unfortunately BOINC ./configure is not intelligent in setting FLAGS for Android
-export CFLAGS='-DANDROID -O3'
-export CXXFLAGS='-DANDROID -O3'
+export CFLAGS='-DANDROID -DDECLARE_TIMEZONE'
+export CXXFLAGS='-DANDROID -DDECLARE_TIMEZONE'
+if [ -z "$BOINC_DEBUG" ]; then
+    # Release
+    export CFLAGS="$CFLAGS -O3"
+    export CXXFLAGS="$CXXFLAGS -O3"
+else
+    # Debug
+    export CFLAGS="$CFLAGS -O1"
+    export CXXFLAGS="$CXXFLAGS -O1"
+fi
 export LDFLAGS="-llog -latomic -static-libstdc++ -L$OPENSSL_DIR/lib"
 
 ./_autosetup
@@ -42,16 +55,19 @@ export LDFLAGS="-llog -latomic -static-libstdc++ -L$OPENSSL_DIR/lib"
 make -s
 make stage -s
 
-echo 'Stripping binaries'
-cd "$BOINC/stage/usr/local/bin"
-"$STRIP" *
+if [ -z "$BOINC_DEBUG" ]; then
+    # Release
+    echo 'Stripping binaries'
+    cd "$BOINC/stage/usr/local/bin"
+    "$STRIP" *
+fi
 
-echo 'Copy assets'
+echo 'Copying assets'
 cd "$BOINC/android"
-mkdir -p "BOINC/app/src/main/assets"
+mkdir -p "BOINC/app/src/main/assets/$ABI/"
 cp -f "$BOINC/stage/usr/local/bin/boinc" "BOINC/app/src/main/assets/$ABI/boinc"
 cp -f "$BOINC/win_build/installerv2/redist/all_projects_list.xml" "BOINC/app/src/main/assets/all_projects_list.xml"
 cp -f "$BOINC/curl/ca-bundle.crt" "BOINC/app/src/main/assets/ca-bundle.crt"
 
-echo "===== BOINC build for $TARGET ($ABI) done ====="
+echo "===== BOINC ${BOINC_VER:-unknown} build for $TARGET ($ABI) done ====="
 exit

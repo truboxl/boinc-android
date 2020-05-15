@@ -12,9 +12,13 @@ if [ ! -d "$OPENSSL_DIR" ]; then
     echo 'No OpenSSL directory detected! cURL build may not have SSL support!'
 fi
 
-echo "===== cURL build for $TARGET start ====="
+echo "===== curl ${CURL_VER:-unknown} build for $TARGET start ====="
 
-cd ./curl*/
+if [ ! -z "$CURL_VER" ]; then
+    cd "./src/curl-$CURL_VER/"
+else
+    cd ./src/curl*/
+fi
 
 if [ -e ./Makefile ] && $(grep -q '^clean:' ./Makefile) ; then
     make clean -s
@@ -23,8 +27,8 @@ if [ ! -e ./configure ]; then
     ./buildconf
 fi
 ./configure $CURL_ARGS
-make -s
+make
 make install -s
 
-echo "===== cURL build for $TARGET done ====="
+echo "===== curl ${CURL_VER:-unknown} build for $TARGET done ====="
 exit

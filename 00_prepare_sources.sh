@@ -1,25 +1,29 @@
 #!/bin/sh
+# Sources version
+export OPENSSL_VER=1.1.1g
+export CURL_VER=7.69.1
+export NDK_VER=r21b
+
 echo '===== Prepare sources start ====='
+mkdir -p "$PWD/src/"
+cd "$PWD/src/"
 
 echo 'Preparing OpenSSL sources'
 #git clone 'https://github.com/openssl/openssl' # OpenSSL 3 is broken for Android
-curl -#OC - 'https://www.openssl.org/source/openssl-1.1.1g.tar.gz'
-tar xf openssl-1.1.1g.tar.gz
+curl -#OC - "https://www.openssl.org/source/openssl-$OPENSSL_VER.tar.gz"
+tar xf "openssl-$OPENSSL_VER.tar.gz"
 
-echo 'Preparing cURL sources'
+echo 'Preparing curl sources'
 #git clone 'https://github.com/curl/curl'
-curl -#OC - 'https://curl.haxx.se/download/curl-7.69.1.tar.xz'
-tar xf curl-7.69.1.tar.xz
+curl -#OC - "https://curl.haxx.se/download/curl-$CURL_VER.tar.xz"
+tar xf "curl-$CURL_VER.tar.xz"
 
 echo 'Preparing BOINC sources'
 git clone 'https://github.com/boinc/boinc'
 # BOINC Android is moving fast in master
+# During build, BOINC unknown will be shown
 
 echo 'Preparing Android NDK'
-# If you have already downloaded Android NDK
-# please edit $NDK at ./99_build_boinc_all.sh
-# and comment the lines here
-
 case "`uname`" in
     'Linux')
         HOST_TAG='linux-x86_64'
@@ -35,8 +39,10 @@ case "`uname`" in
         ;;
 esac
 
-curl -#OC - "https://dl.google.com/android/repository/android-ndk-r21b-$HOST_TAG.zip"
-unzip -q "android-ndk-r21b-$HOST_TAG.zip"
+# If you have already downloaded Android NDK
+# please edit $NDK at ./set_env.sh and comment the lines here
+curl -#OC - "https://dl.google.com/android/repository/android-ndk-$NDK_VER-$HOST_TAG.zip"
+unzip -q "android-ndk-$NDK_VER-$HOST_TAG.zip"
 
 # EXPERIMENTAL BUILD ON WINDOWS
 # Please don't go into the deep rabbit hole of building on Windows

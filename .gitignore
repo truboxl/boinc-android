@@ -3,12 +3,8 @@ buildcache/
 env*
 
 # Sources
-android-ndk-r*/
-boinc*/
-curl*/
-openssl*/
+src/
 
-# Archives
-*.zip
-*.tar*
-
+# Logs
+*.log
+*.txt
