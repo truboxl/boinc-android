@@ -1,0 +1,166 @@
+diff --git a/client/Makefile.am b/client/Makefile.am
+index f39c45fe60..2b1a4d73f2 100644
+--- a/client/Makefile.am
++++ b/client/Makefile.am
+@@ -113,14 +113,26 @@ boinc_client_LDADD = $(LIBBOINC) $(LIBBOINC_CRYPT) $(BOINC_EXTRA_LIBS) $(PTHREAD
+ 
+ boinc_clientdir = $(bindir)
+ 
+-if OS_ARM_LINUX
++if OS_LINUX_ARM
++EXTRA_boinc_client_DEPENDENCIES = libwhetneon.a libwhetvfp.a
+ boinc_client_LDADD += libwhetneon.a libwhetvfp.a
+ noinst_LIBRARIES = libwhetneon.a libwhetvfp.a
+ libwhetneon_a_SOURCES = whetstone.cpp
+-libwhetneon_a_CXXFLAGS = $(boinc_client_CXXFLAGS) -DANDROID_NEON -mfloat-abi=softfp -mfpu=neon
+-
+ libwhetvfp_a_SOURCES = whetstone.cpp
+-libwhetvfp_a_CXXFLAGS = $(boinc_client_CXXFLAGS) -DANDROID_VFP -mfloat-abi=softfp -mfpu=vfp
++if !OS_LINUX_ARMHF
++libwhetneon_a_CXXFLAGS = $(boinc_client_CXXFLAGS) -DARM_NEON -mfloat-abi=softfp -mfpu=neon
++libwhetvfp_a_CXXFLAGS = $(boinc_client_CXXFLAGS) -DARM_VFP -mfloat-abi=softfp -mfpu=vfp
++else
++libwhetneon_a_CXXFLAGS = $(boinc_client_CXXFLAGS) -DARM_NEON -mfloat-abi=hard -mfpu=neon
++libwhetvfp_a_CXXFLAGS = $(boinc_client_CXXFLAGS) -DARM_VFP -mfloat-abi=hard -mfpu=vfp
++endif
++endif
++if OS_LINUX_AARCH64
++EXTRA_boinc_client_DEPENDENCIES = libwhetneon.a
++boinc_client_LDADD += libwhetneon.a
++noinst_LIBRARIES = libwhetneon.a
++libwhetneon_a_SOURCES = whetstone.cpp
++libwhetneon_a_CXXFLAGS = $(boinc_client_CXXFLAGS) -DARM_NEON
+ endif
+ 
+ switcher_SOURCES = switcher.cpp
+diff --git a/client/cpu_benchmark.h b/client/cpu_benchmark.h
+index f20c182bed..a19b0f116f 100644
+--- a/client/cpu_benchmark.h
++++ b/client/cpu_benchmark.h
+@@ -31,19 +31,25 @@ extern bool benchmark_time_to_stop(int which);
+ 
+ // separate different compilations of whetstone.cpp which will utilize
+ // various ARM fp features ie neon, vfp, or "normal"
+-#ifdef ANDROID
+-#ifdef ANDROID_NEON
+-// add CXXFLAGS/CFLAGS for gcc:  -DANDROID_NEON -mfloat-abi=softfp -mfpu=neon
++// add CXXFLAGS/CFLAGS for gcc:
++// arm    : -DARM_NEON -mfloat-abi=softfp -mfpu=neon
++//          -DARM_VFP -mfloat-abi=softfp -mfpu=vfp
++// armhf  : -DARM_NEON -mfloat-abi=hard -mfpu=neon
++//          -DARM_VFP -mfloat-abi=hard -mfpu=vfp
++// aarch64: -DARM_NEON
++#if defined(__arm__) || defined(__aarch64__)
++#ifdef __ARM_NEON
+ #include <arm_neon.h>
+-#endif // ANDROID_NEON
++#endif // __ARM_NEON
+ 
+-namespace android_neon {
++namespace arm_neon {
+     int whetstone(double& flops, double& cpu_time, double min_cpu_time);
+ }
+ 
+-namespace android_vfp {
++#if defined(__arm__)
++namespace arm_vfp {
+     int whetstone(double& flops, double& cpu_time, double min_cpu_time);
+ }
++#endif // defined(__arm__)
+ 
+-#endif // ANDROID
+-
++#endif // defined(__arm__) || defined(__aarch64__)
+diff --git a/client/cs_benchmark.cpp b/client/cs_benchmark.cpp
+index bc35972467..086a3c681a 100644
+--- a/client/cs_benchmark.cpp
++++ b/client/cs_benchmark.cpp
+@@ -176,20 +176,27 @@ int cpu_benchmarks(BENCHMARK_DESC* bdp) {
+ 
+     bdp->error_str[0] = '\0';
+ 
+-#if defined(ANDROID) && defined(__arm__)
++#if defined(__arm__)
+     // check for FP accelerator: VFP, Neon, or none;
+     // run the appropriate version of Whetstone
+     // (separated using namespaces)
+     //
+-    if (strstr(gstate.host_info.p_features, " neon ")) { 
++    if (strstr(gstate.host_info.p_features, " neon ")) {
+         // have ARM neon FP capabilities
+-        retval = android_neon::whetstone(host_info.p_fpops, fp_time, MIN_CPU_TIME);
+-    } else if (strstr(gstate.host_info.p_features, " vfp ")) { 
++        retval = arm_neon::whetstone(host_info.p_fpops, fp_time, MIN_CPU_TIME);
++    } else if (strstr(gstate.host_info.p_features, " vfp ")) {
+         // have ARM vfp FP capabilities
+-        retval = android_vfp::whetstone(host_info.p_fpops, fp_time, MIN_CPU_TIME);
++        retval = arm_vfp::whetstone(host_info.p_fpops, fp_time, MIN_CPU_TIME);
+     } else { // just run normal test
+         retval = whetstone(host_info.p_fpops, fp_time, MIN_CPU_TIME);
+     }
++#elif defined(__aarch64__)
++    if (strstr(gstate.host_info.p_features, " asimd ")) {
++      // aarch64 shows asimd instead of neon
++      retval = arm_neon::whetstone(host_info.p_fpops, fp_time, MIN_CPU_TIME);
++    } else { // just run normal test
++      retval = whetstone(host_info.p_fpops, fp_time, MIN_CPU_TIME);
++    }
+ #else
+     retval = whetstone(host_info.p_fpops, fp_time, MIN_CPU_TIME);
+ #endif
+diff --git a/client/whetstone.cpp b/client/whetstone.cpp
+index 4b066c3d28..cb13c5cdc5 100644
+--- a/client/whetstone.cpp
++++ b/client/whetstone.cpp
+@@ -40,14 +40,14 @@
+ #define SPDP double
+ #endif
+ 
+-#ifdef ANDROID
+-#ifdef ANDROID_NEON
+-    namespace android_neon {
+-#else
+-  #ifdef ANDROID_VFP
+-    namespace android_vfp {
++#if defined(__arm__) || defined(__aarch64__)
++  #ifdef ARM_NEON
++    namespace arm_neon {
++  #else
++  #ifdef ARM_VFP
++    namespace arm_vfp {
++  #endif
+   #endif
+-#endif
+ #endif
+ 
+ // External array; store results here so that optimizing compilers
+@@ -290,6 +290,6 @@ int whetstone(double& flops, double& cpu_time, double min_cpu_time) {
+     return 0;
+ }
+ 
+-#if defined(ANDROID_NEON) || defined(ANDROID_VFP)
++#if defined(ARM_NEON) || defined(ARM_VFP)
+   }
+ #endif // namespace closure
+diff --git a/configure.ac b/configure.ac
+index 5e5d29b579..13fdad8aa1 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -1046,7 +1046,16 @@ AM_CONDITIONAL(OS_WIN32, [echo $host_os | egrep '^mingw|^winnt' > /dev/null])
+ AM_CONDITIONAL(OS_WIN32_MINGW, [echo $host_os | grep '^mingw' > /dev/null])
+ dnl or OS2
+ AM_CONDITIONAL(OS_OS2, [echo $host_os | grep '^os2' > /dev/null])
+-AM_CONDITIONAL(OS_ARM_LINUX, [echo $host_alias | grep '^arm-linux' > /dev/null])
++
++dnl Cross compile for (and native compile on) ARM
++dnl Enable NEON in benchmark
++AM_CONDITIONAL(OS_LINUX_ARM,
++[$(echo $host_cpu | grep '^arm' > /dev/null) && $(echo $host_os | grep '^linux' > /dev/null)])
++AM_CONDITIONAL(OS_LINUX_ARMHF,
++[$($(echo $host_cpu | grep '^arm' > /dev/null) && $(echo $host_os | grep '^linux.*hf' > /dev/null)) || \
++$($(echo $host_cpu | grep '^armv7hl' > /dev/null) && $(echo $host_os | grep '^linux' > /dev/null))])
++AM_CONDITIONAL(OS_LINUX_AARCH64,
++[$(echo $host_cpu | grep '^aarch64' > /dev/null) && $(echo $host_os | grep '^linux' > /dev/null)])
+ 
+ dnl Whether to build fcgi components
+ AM_CONDITIONAL(ENABLE_FCGI,[test "${enable_fcgi}" = yes])
