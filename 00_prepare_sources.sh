@@ -37,7 +37,7 @@ esac
 # If you have already downloaded Android NDK
 # please edit $NDK at ./set_env.sh and comment the lines here
 curl -#OC - "https://dl.google.com/android/repository/android-ndk-${NDK_VER}-${HOST_TAG}.zip"
-unzip -q "android-ndk-${NDK_VER}-${HOST_TAG}.zip"
+unzip -oq "android-ndk-${NDK_VER}-${HOST_TAG}.zip"
 
 # EXPERIMENTAL BUILD ON WINDOWS
 # Please don't go into the deep rabbit hole of building on Windows
@@ -52,9 +52,13 @@ unzip -q "android-ndk-${NDK_VER}-${HOST_TAG}.zip"
 # TODO: Broken at building for arm
 
 echo 'Preparing BOINC sources'
-git clone 'https://github.com/boinc/boinc'
 # BOINC Android is moving fast in master
 # During build, BOINC unknown will be shown
+if [ -d ./boinc ]; then
+    echo -e 'BOINC repo seems to be available, moving on\n'
+else
+    git clone 'https://github.com/boinc/boinc' || exit 1
+fi
 
 echo '===== Prepare sources done ====='
 exit
