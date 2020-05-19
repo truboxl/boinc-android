@@ -19,7 +19,7 @@ export NDK_VER=r21b
 export MAKEFLAGS="${MAKEFLAGS:--j2}"
 
 # Android NDK
-export NDK="${NDK:-$PWD/src/android-ndk-$NDK_VER}"
+export NDK="${NDK:-${PWD}/src/android-ndk-${NDK_VER}}"
 export ANDROID_NDK_ROOT="$NDK" # Used by OpenSSL 3, currently broken
 export ANDROID_NDK_HOME="$NDK" # Used by OpenSSL 1.1
 
@@ -29,10 +29,10 @@ export ANDROID_NDK_HOME="$NDK" # Used by OpenSSL 1.1
 # 32-bit Windows    windows
 # 64-bit Windows    windows-x86_64
 case "$(uname)" in
-    'Linux')
+    Linux)
         export HOST_TAG='linux-x86_64'
         ;;
-    Darwin*)
+    Darwin)
         export HOST_TAG='darwin-x86_64'
         ;;
     MSYS*|MINGW*)
@@ -52,7 +52,7 @@ export ARCH="${ARCH:-aarch64}"
 if [ -z "$ARCH" ]; then
     export ARCH='unknown'
 fi
-export TARGET="$ARCH-linux-android"
+export TARGET="${ARCH}-linux-android"
 export ABI="$ARCH"
 if [ "$ARCH" = 'aarch64' ]; then
     export ABI='arm64-v8a'
@@ -71,38 +71,38 @@ fi
 export API="${API:-21}"
 
 # Compile
-export TOOLCHAIN="$NDK/toolchains/llvm/prebuilt/$HOST_TAG"
+export TOOLCHAIN="${NDK}/toolchains/llvm/prebuilt/${HOST_TAG}"
 if [ -z "$OLDPATH" ]; then
     export OLDPATH="$PATH"
 fi
-export PATH="$TOOLCHAIN/bin:$PATH"
-export AR="$TARGET-ar"
-export AS="$TARGET-as"
-export CC="$TARGET$API-clang"
-export CXX="$TARGET$API-clang++"
+export PATH="${TOOLCHAIN}/bin:${PATH}"
+export AR="${TARGET}-ar"
+export AS="${TARGET}-as"
+export CC="${TARGET}${API}-clang"
+export CXX="${TARGET}${API}-clang++"
 if [ "$ARCH" = 'arm' ]; then
-    export CC="armv7a-linux-androideabi$API-clang"
-    export CXX="armv7a-linux-androideabi$API-clang++"
+    export CC="armv7a-linux-androideabi${API}-clang"
+    export CXX="armv7a-linux-androideabi${API}-clang++"
 fi
-export LD="$TARGET-ld"
-export NM="$TARGET-nm"
-export OBJDUMP="$TARGET-objdump"
-export RANLIB="$TARGET-ranlib"
-export STRIP="$TARGET-strip"
-export SYSROOT="$TOOLCHAIN/sysroot"
+export LD="${TARGET}-ld"
+export NM="${TARGET}-nm"
+export OBJDUMP="${TARGET}-objdump"
+export RANLIB="${TARGET}-ranlib"
+export STRIP="${TARGET}-strip"
+export SYSROOT="${TOOLCHAIN}/sysroot"
 
 # OpenSSL
-export OPENSSL_DIR="$PWD/buildcache/ssl-$ARCH-$API"
+export OPENSSL_DIR="${PWD}/buildcache/ssl-${ARCH}-${API}"
 if [ "$ARCH" = 'aarch64' ]; then
     export ARCH_SSL='arm64'
 else
     export ARCH_SSL="$ARCH"
 fi
-export OPENSSL_ARGS="android-$ARCH_SSL no-shared no-dso -D__ANDROID_API__=$API --prefix=$OPENSSL_DIR --openssldir=$OPENSSL_DIR"
+export OPENSSL_ARGS="android-${ARCH_SSL} no-shared no-dso -D__ANDROID_API__=${API} --prefix=${OPENSSL_DIR} --openssldir=${OPENSSL_DIR}"
 
 # curl
-export CURL_DIR="$PWD/buildcache/curl-$ARCH-$API"
-export CURL_ARGS="--host=$TARGET --with-pic --disable-shared --with-ssl=$OPENSSL_DIR --with-sysroot=$SYSROOT --prefix=$CURL_DIR"
+export CURL_DIR="${PWD}/buildcache/curl-${ARCH}-${API}"
+export CURL_ARGS="--host=${TARGET} --with-pic --disable-shared --with-ssl=${OPENSSL_DIR} --with-sysroot=${SYSROOT} --prefix=${CURL_DIR}"
 
 # BOINC
 case "$ARCH" in
@@ -133,11 +133,11 @@ case "$ARCH" in
         ;;
 esac
 
-export BOINC_DEPS="--with-ssl=$OPENSSL_DIR  --with-libcurl=$CURL_DIR --with-sysroot=$SYSROOT"
-export BOINC_ARGS="--host=$TARGET $BOINC_PLATFORM $BOINC_ALT_PLATFORM --disable-server --disable-manager --disable-shared --enable-static $BOINC_DEPS $BOINC_ARGS_EXTRA"
-if [ ! -z "$BOINC_DEBUG" ]; then
+export BOINC_DEPS="--with-ssl=${OPENSSL_DIR}  --with-libcurl=${CURL_DIR} --with-sysroot=${SYSROOT}"
+export BOINC_ARGS="--host=${TARGET} ${BOINC_PLATFORM} ${BOINC_ALT_PLATFORM} --disable-server --disable-manager --disable-shared --enable-static ${BOINC_DEPS} ${BOINC_ARGS_EXTRA}"
+if [ -n "$BOINC_DEBUG" ]; then
     # Debug
-    export BOINC_ARGS="$BOINC_ARGS --enable-debug"
+    export BOINC_ARGS="${BOINC_ARGS} --enable-debug"
 fi
 
 # echo
@@ -150,13 +150,13 @@ if [ "$VERBOSE" = '1' ]; then
         uniq -u env2 env1
     fi
     sed -i env1 -e 's/echo =$.*//g'
-    . ./env1
+    . ./env1 # SC1091
 fi
 
 # Check path
 if [ ! -d "$NDK" ]; then
-    echo 'ERROR: $NDK path does not exist!'
+    echo 'ERROR: $NDK path does not exist!' # SC2016
 fi
 if [ ! -d "$TOOLCHAIN" ]; then
-    echo 'ERROR: $TOOLCHAIN path does not exist!'
+    echo 'ERROR: $TOOLCHAIN path does not exist!' # SC2016
 fi

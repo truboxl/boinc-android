@@ -5,30 +5,25 @@ export CURL_VER=7.69.1
 export NDK_VER=r21b
 
 echo '===== Prepare sources start ====='
-mkdir -p "$PWD/src/"
-cd "$PWD/src/"
+mkdir -p "${PWD}/src/"
+cd "${PWD}/src/" || exit 1
 
 echo 'Preparing OpenSSL sources'
 #git clone 'https://github.com/openssl/openssl' # OpenSSL 3 is broken for Android
-curl -#OC - "https://www.openssl.org/source/openssl-$OPENSSL_VER.tar.gz"
-tar xf "openssl-$OPENSSL_VER.tar.gz"
+curl -#OC - "https://www.openssl.org/source/openssl-${OPENSSL_VER}.tar.gz"
+tar xf "openssl-${OPENSSL_VER}.tar.gz"
 
 echo 'Preparing curl sources'
 #git clone 'https://github.com/curl/curl'
-curl -#OC - "https://curl.haxx.se/download/curl-$CURL_VER.tar.xz"
-tar xf "curl-$CURL_VER.tar.xz"
-
-echo 'Preparing BOINC sources'
-git clone 'https://github.com/boinc/boinc'
-# BOINC Android is moving fast in master
-# During build, BOINC unknown will be shown
+curl -#OC - "https://curl.haxx.se/download/curl-${CURL_VER}.tar.xz"
+tar xf "curl-${CURL_VER}.tar.xz"
 
 echo 'Preparing Android NDK'
-case "`uname`" in
-    'Linux')
+case "$(uname)" in
+    Linux)
         HOST_TAG='linux-x86_64'
         ;;
-    Darwin*)
+    Darwin)
         HOST_TAG='darwin-x86_64'
         ;;
     MSYS*|MINGW*)
@@ -41,8 +36,8 @@ esac
 
 # If you have already downloaded Android NDK
 # please edit $NDK at ./set_env.sh and comment the lines here
-curl -#OC - "https://dl.google.com/android/repository/android-ndk-$NDK_VER-$HOST_TAG.zip"
-unzip -q "android-ndk-$NDK_VER-$HOST_TAG.zip"
+curl -#OC - "https://dl.google.com/android/repository/android-ndk-${NDK_VER}-${HOST_TAG}.zip"
+unzip -q "android-ndk-${NDK_VER}-${HOST_TAG}.zip"
 
 # EXPERIMENTAL BUILD ON WINDOWS
 # Please don't go into the deep rabbit hole of building on Windows
@@ -55,6 +50,11 @@ unzip -q "android-ndk-$NDK_VER-$HOST_TAG.zip"
 # Use VM or WSL instead
 # Use msys2 if you really want to fix issues
 # TODO: Broken at building for arm
+
+echo 'Preparing BOINC sources'
+git clone 'https://github.com/boinc/boinc'
+# BOINC Android is moving fast in master
+# During build, BOINC unknown will be shown
 
 echo '===== Prepare sources done ====='
 exit
