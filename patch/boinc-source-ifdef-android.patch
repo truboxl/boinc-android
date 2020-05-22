@@ -1,0 +1,13 @@
+diff --git a/lib/synch.cpp b/lib/synch.cpp
+index 60124de8c1..7a0acbe833 100644
+--- a/lib/synch.cpp
++++ b/lib/synch.cpp
+@@ -18,7 +18,7 @@
+ 
+ // interfaces for accessing sempahores
+ 
+-#ifndef ANDROID
++#ifndef __ANDROID__
+ 
+ #include "config.h"
+ #include <cstdio>
