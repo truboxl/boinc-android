@@ -34,9 +34,18 @@ index f39c45fe60..2b1a4d73f2 100644
  
  switcher_SOURCES = switcher.cpp
 diff --git a/client/cpu_benchmark.h b/client/cpu_benchmark.h
-index f20c182bed..a19b0f116f 100644
+index f20c182bed..ee4cb07f8a 100644
 --- a/client/cpu_benchmark.h
 +++ b/client/cpu_benchmark.h
+@@ -18,7 +18,7 @@
+ #define MAX_CPU_BENCHMARKS_SECONDS    300
+ #define CPU_BENCHMARKS_RUNNING        0
+ #define CPU_BENCHMARKS_COMPLETE       1
+-#define CPU_BENCHMARKS_NOT_RUNNING    2    
++#define CPU_BENCHMARKS_NOT_RUNNING    2
+ #define CPU_BENCHMARKS_ERROR          3
+ 
+ #define BM_TYPE_FP       0
 @@ -31,19 +31,25 @@ extern bool benchmark_time_to_stop(int which);
  
  // separate different compilations of whetstone.cpp which will utilize
@@ -50,7 +59,7 @@ index f20c182bed..a19b0f116f 100644
 +// armhf  : -DARM_NEON -mfloat-abi=hard -mfpu=neon
 +//          -DARM_VFP -mfloat-abi=hard -mfpu=vfp
 +// aarch64: -DARM_NEON
-+#if defined(__arm__) || defined(__aarch64__)
++#if defined(__linux__) && ( defined(__arm__) || defined(__aarch64__) )
 +#ifdef __ARM_NEON
  #include <arm_neon.h>
 -#endif // ANDROID_NEON
@@ -70,9 +79,9 @@ index f20c182bed..a19b0f116f 100644
  
 -#endif // ANDROID
 -
-+#endif // defined(__arm__) || defined(__aarch64__)
++#endif // defined(__linux__) && ( defined(__arm__) || defined(__aarch64__) )
 diff --git a/client/cs_benchmark.cpp b/client/cs_benchmark.cpp
-index bc35972467..086a3c681a 100644
+index bc35972467..1bf60cfb02 100644
 --- a/client/cs_benchmark.cpp
 +++ b/client/cs_benchmark.cpp
 @@ -176,20 +176,27 @@ int cpu_benchmarks(BENCHMARK_DESC* bdp) {
@@ -80,7 +89,7 @@ index bc35972467..086a3c681a 100644
      bdp->error_str[0] = '\0';
  
 -#if defined(ANDROID) && defined(__arm__)
-+#if defined(__arm__)
++#if defined(__linux__) && defined(__arm__)
      // check for FP accelerator: VFP, Neon, or none;
      // run the appropriate version of Whetstone
      // (separated using namespaces)
@@ -98,7 +107,7 @@ index bc35972467..086a3c681a 100644
      } else { // just run normal test
          retval = whetstone(host_info.p_fpops, fp_time, MIN_CPU_TIME);
      }
-+#elif defined(__aarch64__)
++#elif defined(__linux__) && defined(__aarch64__)
 +    if (strstr(gstate.host_info.p_features, " asimd ")) {
 +      // aarch64 shows asimd instead of neon
 +      retval = arm_neon::whetstone(host_info.p_fpops, fp_time, MIN_CPU_TIME);
@@ -109,7 +118,7 @@ index bc35972467..086a3c681a 100644
      retval = whetstone(host_info.p_fpops, fp_time, MIN_CPU_TIME);
  #endif
 diff --git a/client/whetstone.cpp b/client/whetstone.cpp
-index 4b066c3d28..cb13c5cdc5 100644
+index 4b066c3d28..448d26714d 100644
 --- a/client/whetstone.cpp
 +++ b/client/whetstone.cpp
 @@ -40,14 +40,14 @@
@@ -122,7 +131,7 @@ index 4b066c3d28..cb13c5cdc5 100644
 -#else
 -  #ifdef ANDROID_VFP
 -    namespace android_vfp {
-+#if defined(__arm__) || defined(__aarch64__)
++#if defined(__linux__) && ( defined(__arm__) || defined(__aarch64__) )
 +  #ifdef ARM_NEON
 +    namespace arm_neon {
 +  #else
@@ -139,11 +148,11 @@ index 4b066c3d28..cb13c5cdc5 100644
  }
  
 -#if defined(ANDROID_NEON) || defined(ANDROID_VFP)
-+#if defined(ARM_NEON) || defined(ARM_VFP)
++#if defined(__linux__) && ( defined(ARM_NEON) || defined(ARM_VFP) )
    }
  #endif // namespace closure
 diff --git a/configure.ac b/configure.ac
-index 5e5d29b579..13fdad8aa1 100644
+index 5e5d29b579..769035c439 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -1046,7 +1046,16 @@ AM_CONDITIONAL(OS_WIN32, [echo $host_os | egrep '^mingw|^winnt' > /dev/null])
@@ -152,7 +161,7 @@ index 5e5d29b579..13fdad8aa1 100644
  AM_CONDITIONAL(OS_OS2, [echo $host_os | grep '^os2' > /dev/null])
 -AM_CONDITIONAL(OS_ARM_LINUX, [echo $host_alias | grep '^arm-linux' > /dev/null])
 +
-+dnl Cross compile for (and native compile on) ARM
++dnl Cross compile for (and native compile on) ARM Linux
 +dnl Enable NEON in benchmark
 +AM_CONDITIONAL(OS_LINUX_ARM,
 +[$(echo $host_cpu | grep '^arm' > /dev/null) && $(echo $host_os | grep '^linux' > /dev/null)])
