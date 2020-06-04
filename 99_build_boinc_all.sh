@@ -2,7 +2,7 @@
 set -e
 
 API64=21
-API32=16
+API32=19
 
 build() {
     ./01_build_openssl.sh
