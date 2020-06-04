@@ -31,7 +31,7 @@
 1. Check and edit `./00_prepare_sources.sh` if necessary
 1. Run `./00_prepare_sources.sh` to prepare all the sources
 1. Run `./99_build_boinc_all.sh` to compile BOINC for Android
-1. Run Android Studio and open `./boinc/android/BOINC`
+1. Run Android Studio and open `./src/boinc/android/BOINC`
 1. ???
 1. Profit!
 
