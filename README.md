@@ -1,16 +1,6 @@
 # truboxl/boinc-android
 
-## Updated scripts for building BOINC for Android
-
-### WARNING
-
-### You may see a lot of errors in Android Studio
-
-### BOINC for Android is still undergoing architecture overhaul
-
-### See <https://github.com/BOINC/boinc/issues/3561>
-
-### The scripts may or may not work and are constantly updated
+## Cleaner build scripts for building BOINC for Android app
 
 ## Prerequisite
 
@@ -23,6 +13,7 @@
 * make
 * perl
 * pkg-config
+* tar
 * unzip
 
 ## Steps
