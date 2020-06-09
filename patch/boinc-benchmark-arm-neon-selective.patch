@@ -1,14 +1,14 @@
 diff --git a/client/Makefile.am b/client/Makefile.am
-index f39c45fe60..2b1a4d73f2 100644
+index 253a858add..2b1a4d73f2 100644
 --- a/client/Makefile.am
 +++ b/client/Makefile.am
-@@ -113,14 +113,26 @@ boinc_client_LDADD = $(LIBBOINC) $(LIBBOINC_CRYPT) $(BOINC_EXTRA_LIBS) $(PTHREAD
+@@ -113,15 +113,26 @@ boinc_client_LDADD = $(LIBBOINC) $(LIBBOINC_CRYPT) $(BOINC_EXTRA_LIBS) $(PTHREAD
  
  boinc_clientdir = $(bindir)
  
 -if OS_ARM_LINUX
 +if OS_LINUX_ARM
-+EXTRA_boinc_client_DEPENDENCIES = libwhetneon.a libwhetvfp.a
+ EXTRA_boinc_client_DEPENDENCIES = libwhetneon.a libwhetvfp.a
  boinc_client_LDADD += libwhetneon.a libwhetvfp.a
  noinst_LIBRARIES = libwhetneon.a libwhetvfp.a
  libwhetneon_a_SOURCES = whetstone.cpp
@@ -34,18 +34,9 @@ index f39c45fe60..2b1a4d73f2 100644
  
  switcher_SOURCES = switcher.cpp
 diff --git a/client/cpu_benchmark.h b/client/cpu_benchmark.h
-index f20c182bed..ee4cb07f8a 100644
+index f20c182bed..84a76d2aaa 100644
 --- a/client/cpu_benchmark.h
 +++ b/client/cpu_benchmark.h
-@@ -18,7 +18,7 @@
- #define MAX_CPU_BENCHMARKS_SECONDS    300
- #define CPU_BENCHMARKS_RUNNING        0
- #define CPU_BENCHMARKS_COMPLETE       1
--#define CPU_BENCHMARKS_NOT_RUNNING    2    
-+#define CPU_BENCHMARKS_NOT_RUNNING    2
- #define CPU_BENCHMARKS_ERROR          3
- 
- #define BM_TYPE_FP       0
 @@ -31,19 +31,25 @@ extern bool benchmark_time_to_stop(int which);
  
  // separate different compilations of whetstone.cpp which will utilize
