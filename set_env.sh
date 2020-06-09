@@ -13,7 +13,7 @@
 # Sources version
 export OPENSSL_VER=1.1.1g
 export CURL_VER=7.69.1
-export NDK_VER=r21b
+export NDK_VER=r21c
 
 # make
 export MAKEFLAGS="${MAKEFLAGS:--j2}"
@@ -90,6 +90,12 @@ export OBJDUMP="${TARGET}-objdump"
 export RANLIB="${TARGET}-ranlib"
 export STRIP="${TARGET}-strip"
 export SYSROOT="${TOOLCHAIN}/sysroot"
+
+# arm vfpv3-d16 fix
+if [ "$ARCH" = 'arm' ]; then
+    export CFLAGS="${CFLAGS} -mfloat-abi=softfp -mfpu=vfpv3-d16"
+    export CXXFLAGS="${CXXFLAGS} -mfloat-abi=softfp -mfpu=vfpv3-d16"
+fi
 
 # OpenSSL
 export OPENSSL_DIR="${PWD}/buildcache/ssl-${ARCH}-${API}"

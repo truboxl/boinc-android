@@ -2,7 +2,7 @@
 # Sources version
 export OPENSSL_VER=1.1.1g
 export CURL_VER=7.69.1
-export NDK_VER=r21b
+export NDK_VER=r21c
 
 echo '===== Prepare sources start ====='
 mkdir -p "${PWD}/src/"
@@ -49,13 +49,12 @@ unzip -oq "android-ndk-${NDK_VER}-${HOST_TAG}.zip"
 # * slow compiling (even with MAKEFLAGS='-j2')
 # Use VM or WSL instead
 # Use msys2 if you really want to fix issues
-# TODO: Broken at building for arm
 
 echo 'Preparing BOINC sources'
 # BOINC Android is moving fast in master
 # During build, BOINC unknown will be shown
 if [ -d ./boinc ]; then
-    echo -e 'BOINC repo seems to be available, moving on\n'
+    echo 'BOINC repo seems to be available, moving on'
 else
     git clone 'https://github.com/boinc/boinc' || exit 1
 fi
