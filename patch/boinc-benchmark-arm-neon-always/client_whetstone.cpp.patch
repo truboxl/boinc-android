@@ -1,0 +1,29 @@
+diff --git a/client/whetstone.cpp b/client/whetstone.cpp
+index 4b066c3d28..ed08bd052f 100644
+--- a/client/whetstone.cpp
++++ b/client/whetstone.cpp
+@@ -40,16 +40,6 @@
+ #define SPDP double
+ #endif
+ 
+-#ifdef ANDROID
+-#ifdef ANDROID_NEON
+-    namespace android_neon {
+-#else
+-  #ifdef ANDROID_VFP
+-    namespace android_vfp {
+-  #endif
+-#endif
+-#endif
+-
+ // External array; store results here so that optimizing compilers
+ // don't do away with their computation.
+ // suggested by Ben Herndon
+@@ -289,7 +279,3 @@ int whetstone(double& flops, double& cpu_time, double min_cpu_time) {
+     flops = KIPS*1000.0;
+     return 0;
+ }
+-
+-#if defined(ANDROID_NEON) || defined(ANDROID_VFP)
+-  }
+-#endif // namespace closure

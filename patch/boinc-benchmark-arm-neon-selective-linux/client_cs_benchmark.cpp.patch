@@ -1,0 +1,25 @@
+diff --git a/client/cs_benchmark.cpp b/client/cs_benchmark.cpp
+index 2d4f7c05cc..6ab55106ea 100644
+--- a/client/cs_benchmark.cpp
++++ b/client/cs_benchmark.cpp
+@@ -176,17 +176,17 @@ int cpu_benchmarks(BENCHMARK_DESC* bdp) {
+ 
+     bdp->error_str[0] = '\0';
+ 
+-#if defined(ANDROID) && defined(__arm__)
++#if defined(__linux__) && defined(__arm__)
+     // check for FP accelerator: VFP, Neon, or none;
+     // run the appropriate version of Whetstone
+     // (separated using namespaces)
+     //
+     if (strstr(gstate.host_info.p_features, " neon ")) { 
+         // have ARM neon FP capabilities
+-        retval = android_neon::whetstone(host_info.p_fpops, fp_time, MIN_CPU_TIME);
++        retval = arm_neon::whetstone(host_info.p_fpops, fp_time, MIN_CPU_TIME);
+     } else if (strstr(gstate.host_info.p_features, " vfp ")) { 
+         // have ARM vfp FP capabilities
+-        retval = android_vfp::whetstone(host_info.p_fpops, fp_time, MIN_CPU_TIME);
++        retval = arm_vfp::whetstone(host_info.p_fpops, fp_time, MIN_CPU_TIME);
+     } else { // just run normal test
+         retval = whetstone(host_info.p_fpops, fp_time, MIN_CPU_TIME);
+     }
