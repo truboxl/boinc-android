@@ -32,4 +32,3 @@ index a85c8c1891..595adcbcee 100644
  switcher_SOURCES = switcher.cpp
  switcher_LDFLAGS = $(AM_LDFLAGS) -L../lib
  switcher_LDADD = $(LIBBOINC)
- 
