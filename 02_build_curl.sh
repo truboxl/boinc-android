@@ -31,4 +31,3 @@ make
 make install -s
 
 echo "===== curl ${CURL_VER:-unknown} build for ${TARGET} done ====="
-exit

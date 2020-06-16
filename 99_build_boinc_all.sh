@@ -36,7 +36,7 @@ pipelinebuild() {
     API="$API64"
     . ./set_env.sh
     ./01_build_openssl.sh 2>&1 > /dev/null &
-    echo 'aarch64 openssl'
+    echo 'Building aarch64 openssl'
     wait
 
     # T+2
@@ -45,14 +45,14 @@ pipelinebuild() {
     API="$API64"
     . ./set_env.sh
     ./02_build_curl.sh 2>&1 > /dev/null &
-    echo 'aarch64 curl'
+    echo 'Building aarch64 curl'
 
     . ./unset_env.sh
     ARCH=x86_64
     API="$API64"
     . ./set_env.sh
     ./01_build_openssl.sh 2>&1 > /dev/null &
-    echo 'x86_64 openssl'
+    echo 'Building x86_64 openssl'
     wait
 
     # T+3
@@ -61,21 +61,21 @@ pipelinebuild() {
     API="$API64"
     . ./set_env.sh
     ./03_build_boinc.sh 2>&1 > /dev/null &
-    echo 'aarch64 boinc'
+    echo 'Building aarch64 boinc'
 
     . ./unset_env.sh
     ARCH=x86_64
     API="$API64"
     . ./set_env.sh
     ./02_build_curl.sh 2>&1 > /dev/null &
-    echo 'x86_64 curl'
+    echo 'Building x86_64 curl'
 
     . ./unset_env.sh
     ARCH=arm
     API="$API32"
     . ./set_env.sh
     ./01_build_openssl.sh 2>&1 > /dev/null &
-    echo 'arm openssl'
+    echo 'Building arm openssl'
     wait
 
     # T+4
@@ -84,21 +84,21 @@ pipelinebuild() {
     API="$API64"
     . ./set_env.sh
     ./03_build_boinc.sh 2>&1 > /dev/null &
-    echo 'x86_64 boinc'
+    echo 'Building x86_64 boinc'
 
     . ./unset_env.sh
     ARCH=arm
     API="$API32"
     . ./set_env.sh
     ./02_build_curl.sh 2>&1 > /dev/null &
-    echo 'arm curl'
+    echo 'Building arm curl'
 
     . ./unset_env.sh
     ARCH=x86
     API="$API32"
     . ./set_env.sh
     ./01_build_openssl.sh 2>&1 > /dev/null &
-    echo 'x86 openssl'
+    echo 'Building x86 openssl'
     wait
 
     # T+5
@@ -107,14 +107,14 @@ pipelinebuild() {
     API="$API32"
     . ./set_env.sh
     ./03_build_boinc.sh 2>&1 > /dev/null &
-    echo 'arm boinc'
+    echo 'Building arm boinc'
 
     . ./unset_env.sh
     ARCH=x86
     API="$API32"
     . ./set_env.sh
     ./02_build_curl.sh 2>&1 > /dev/null &
-    echo 'x86 curl'
+    echo 'Building x86 curl'
     wait
 
     # T+6
@@ -123,7 +123,7 @@ pipelinebuild() {
     API="$API32"
     . ./set_env.sh
     ./03_build_boinc.sh 2>&1 > /dev/null &
-    echo 'x86 boinc'
+    echo 'Building x86 boinc'
     wait
 }
 
@@ -139,4 +139,3 @@ fi
 
 echo '===== BOINC build for all platforms done ====='
 . ./unset_env.sh
-exit

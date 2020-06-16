@@ -24,4 +24,3 @@ make -s
 make install_sw -s
 
 echo "===== OpenSSL ${OPENSSL_VER:-unknown} build for android-${ARCH_SSL} done ====="
-exit

@@ -4,6 +4,7 @@ env*
 
 # Sources
 src/
+patch/
 
 # Logs
 *.log

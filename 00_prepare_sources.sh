@@ -1,8 +1,8 @@
 #!/bin/sh
 # Sources version
-export OPENSSL_VER=1.1.1g
-export CURL_VER=7.69.1
-export NDK_VER=r21c
+OPENSSL_VER=1.1.1g
+CURL_VER=7.69.1
+NDK_VER=r21c
 
 echo '===== Prepare sources start ====='
 mkdir -p "${PWD}/src/"
@@ -60,4 +60,3 @@ else
 fi
 
 echo '===== Prepare sources done ====='
-exit

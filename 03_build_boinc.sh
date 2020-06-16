@@ -70,4 +70,3 @@ cp -f "${BOINC}/win_build/installerv2/redist/all_projects_list.xml" "BOINC/app/s
 cp -f "${BOINC}/curl/ca-bundle.crt" "BOINC/app/src/main/assets/ca-bundle.crt"
 
 echo "===== BOINC ${BOINC_VER:-unknown} build for ${TARGET} (${ABI}) done ====="
-exit
