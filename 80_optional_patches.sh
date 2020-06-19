@@ -1,7 +1,7 @@
 #!/bin/sh
 # Optional feature patches for BOINC
 
-if [ ! -d ./patch ];
+if [ ! -d ./patch ]; then
     git clone 'https://github.com/truboxl/boinc-feature-patch' ./patch || exit 1
 fi
 
