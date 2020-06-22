@@ -6,7 +6,7 @@ if [ -n "$OLDPATH" ]; then
     export PATH="$OLDPATH"
 fi
 
-grep '^export' set_env.sh | sed -e 's/    //g' | sed -e 's/grep.*//g' | sed -e 's/export /unset /g' | sed -e 's/unset PATH.*//g' | sed -e 's/=.*//g' | sort | uniq | uniq -u > env1
+grep 'export ' set_env.sh | sed -e 's/    //g' | sed -e 's/grep.*//g' | sed -e 's/export /unset /g' | sed -e 's/unset PATH.*//g' | sed -e 's/=.*//g' | sort | uniq | uniq -u > env1
 . ./env1 # SC1091
 
 # echo

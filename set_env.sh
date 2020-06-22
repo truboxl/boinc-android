@@ -20,8 +20,6 @@ export MAKEFLAGS="${MAKEFLAGS:--j2}"
 
 # Android NDK
 export NDK="${NDK:-${PWD}/src/android-ndk-${NDK_VER}}"
-export ANDROID_NDK_ROOT="$NDK" # Used by OpenSSL 3, currently broken
-export ANDROID_NDK_HOME="$NDK" # Used by OpenSSL 1.1
 
 # NDK OS Variant    Host Tag
 # macOS             darwin-x86_64
@@ -76,6 +74,7 @@ if [ -z "$OLDPATH" ]; then
     export OLDPATH="$PATH"
 fi
 export PATH="${TOOLCHAIN}/bin:${PATH}"
+export ADDR2LINE="${TARGET}-addr2line"
 export AR="${TARGET}-ar"
 export AS="${TARGET}-as"
 export CC="${TARGET}${API}-clang"
@@ -84,11 +83,19 @@ if [ "$ARCH" = 'arm' ]; then
     export CC="armv7a-linux-androideabi${API}-clang"
     export CXX="armv7a-linux-androideabi${API}-clang++"
 fi
+export CXXFILT="${TARGET}-c++filt"
+export DWP="${TARGET}-dwp"
+export ELFEDIT="${TARGET}-elfedit"
+export GPROF="${TARGET}-gprof"
 export LD="${TARGET}-ld"
 export NM="${TARGET}-nm"
+export OBJCOPY="${TARGET}-objcopy"
 export OBJDUMP="${TARGET}-objdump"
 export RANLIB="${TARGET}-ranlib"
+export READELF="${TARGET}-readelf"
+export SIZE="${TARGET}-size"
 export STRIP="${TARGET}-strip"
+export STRINGS="${TARGET}-strings"
 export SYSROOT="${TOOLCHAIN}/sysroot"
 
 # arm vfpv3-d16 fix
@@ -98,6 +105,8 @@ if [ "$ARCH" = 'arm' ]; then
 fi
 
 # OpenSSL
+export ANDROID_NDK_ROOT="$NDK" # Used by OpenSSL 3, currently broken
+export ANDROID_NDK_HOME="$NDK" # Used by OpenSSL 1.1
 export OPENSSL_DIR="${PWD}/buildcache/ssl-${ARCH}-${API}"
 if [ "$ARCH" = 'aarch64' ]; then
     export ARCH_SSL='arm64'
