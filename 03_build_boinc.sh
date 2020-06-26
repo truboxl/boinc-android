@@ -37,17 +37,8 @@ if [ -e ./Makefile ] && grep -q '^distclean:' ./Makefile; then
 fi
 
 # Unfortunately BOINC ./configure is not intelligent in setting FLAGS for Android
-export CFLAGS='-DANDROID -DDECLARE_TIMEZONE'
-export CXXFLAGS='-DANDROID -DDECLARE_TIMEZONE'
-if [ -z "$BOINC_DEBUG" ]; then
-    # Release
-    export CFLAGS="${CFLAGS} -O3"
-    export CXXFLAGS="${CXXFLAGS} -O3"
-else
-    # Debug
-    export CFLAGS="${CFLAGS} -O1"
-    export CXXFLAGS="${CXXFLAGS} -O1"
-fi
+export CFLAGS="${CFLAGS} -DANDROID -DDECLARE_TIMEZONE"
+export CXXFLAGS="${CXXFLAGS} -DANDROID -DDECLARE_TIMEZONE"
 export LDFLAGS="-llog -latomic -static-libstdc++ -L${OPENSSL_DIR}/lib"
 
 ./_autosetup
@@ -59,14 +50,18 @@ if [ -z "$BOINC_DEBUG" ]; then
     # Release
     echo 'Stripping binaries'
     cd "${BOINC}/stage/usr/local/bin"
-    "$STRIP" ./*
+    "$STRIP" -v ./*
 fi
 
 echo 'Copying assets'
 cd "${BOINC}/android"
 mkdir -p "BOINC/app/src/main/assets/${ABI}/"
-cp -f "${BOINC}/stage/usr/local/bin/boinc" "BOINC/app/src/main/assets/${ABI}/boinc"
-cp -f "${BOINC}/win_build/installerv2/redist/all_projects_list.xml" "BOINC/app/src/main/assets/all_projects_list.xml"
-cp -f "${BOINC}/curl/ca-bundle.crt" "BOINC/app/src/main/assets/ca-bundle.crt"
+cp -fv "${BOINC}/stage/usr/local/bin/boinc" "BOINC/app/src/main/assets/${ABI}/boinc"
+cp -fv "${BOINC}/win_build/installerv2/redist/all_projects_list.xml" "BOINC/app/src/main/assets/all_projects_list.xml"
+cp -fv "${BOINC}/curl/ca-bundle.crt" "BOINC/app/src/main/assets/ca-bundle.crt"
 
 echo "===== BOINC ${BOINC_VER:-unknown} build for ${TARGET} (${ABI}) done ====="
+
+echo 'If you are cross compiling on WSL, copy the binaries from'
+echo "${BOINC}/android/BOINC/app/src/main/assets"
+echo 'to your directory that can be accessible by Android Studio'

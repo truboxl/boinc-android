@@ -1,24 +1,22 @@
 #!/bin/sh
-# Sources version
-OPENSSL_VER=1.1.1g
-CURL_VER=7.69.1
-NDK_VER=r21c
+# Get the version from one source
+. ./set_env.sh
 
 echo '===== Prepare sources start ====='
 mkdir -p "${PWD}/src/"
 cd "${PWD}/src/" || exit 1
 
-echo 'Preparing OpenSSL sources'
+echo "Preparing OpenSSL ${OPENSSL_VER} sources"
 #git clone 'https://github.com/openssl/openssl' # OpenSSL 3 is broken for Android
 curl -#OC - "https://www.openssl.org/source/openssl-${OPENSSL_VER}.tar.gz"
 tar xf "openssl-${OPENSSL_VER}.tar.gz"
 
-echo 'Preparing curl sources'
+echo "Preparing curl ${CURL_VER} sources"
 #git clone 'https://github.com/curl/curl'
 curl -#OC - "https://curl.haxx.se/download/curl-${CURL_VER}.tar.xz"
 tar xf "curl-${CURL_VER}.tar.xz"
 
-echo 'Preparing Android NDK'
+echo "Preparing Android NDK ${NDK_VER}"
 case "$(uname)" in
     Linux)
         HOST_TAG='linux-x86_64'
@@ -60,3 +58,4 @@ else
 fi
 
 echo '===== Prepare sources done ====='
+. ./unset_env.sh
