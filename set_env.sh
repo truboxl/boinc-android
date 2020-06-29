@@ -58,6 +58,7 @@ fi
 # minSdkVersion
 # API  Version  Notes
 # 23   6.0      fix stderr stdin stdout undefined in OpenSSL / curl
+#               fix telldir seekdir undefined in talloc
 # 21   5.0      support 64bit / mandate PIE
 # 19   4.4      fix sys/swap.h
 # 16   4.1      lowest version to run PIE
@@ -114,7 +115,7 @@ fi
 # openssl/NOTES.ANDROID
 export ANDROID_NDK_ROOT="$NDK" # Used by OpenSSL 3, currently broken
 export ANDROID_NDK_HOME="$NDK" # Used by OpenSSL 1.1
-export OPENSSL_DIR="${PWD}/buildcache/ssl-${ARCH}-${API}"
+export OPENSSL_DIR="${PWD}/buildcache/libssl-${ARCH}-${API}"
 if [ "$ARCH" = 'aarch64' ]; then
     export ARCH_SSL='arm64'
 else
@@ -124,7 +125,7 @@ export OPENSSL_ARGS="android-${ARCH_SSL} no-shared no-dso -D__ANDROID_API__=${AP
 
 ##### curl #####
 # curl/INSTALL.md
-export CURL_DIR="${PWD}/buildcache/curl-${ARCH}-${API}"
+export CURL_DIR="${PWD}/buildcache/libcurl-${ARCH}-${API}"
 export CURL_ARGS="--host=${TARGET} --with-pic --disable-shared --with-ssl=${OPENSSL_DIR} --with-sysroot=${SYSROOT} --prefix=${CURL_DIR}"
 
 ##### BOINC #####

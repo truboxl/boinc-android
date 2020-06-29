@@ -46,7 +46,7 @@ export LDFLAGS="-llog -latomic -static-libstdc++ -L${OPENSSL_DIR}/lib"
 make -s
 make stage -s
 
-if [ -z "$BOINC_DEBUG" ]; then
+if [ -z "$APP_DEBUG" ]; then
     # Release
     echo 'Stripping binaries'
     cd "${BOINC}/stage/usr/local/bin"

@@ -1,6 +1,9 @@
 #!/bin/sh
 set -e
 
+# Temporarily set the API version here, defaults are:
+#API64=21
+#API32=16
 API64=21
 API32=16
 
