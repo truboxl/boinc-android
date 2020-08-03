@@ -139,10 +139,16 @@ echo '===== BOINC build for all platforms start ====='
 if [ "$1" != 'pipeline' ]; then
     normalbuild
 else
-    echo 'Experimental: Building in pipeline'
-    echo 'Expect console output mess'
+    echo 'WARNING: Building in pipeline (Experimental)'
+    echo 'WARNING: Expect console output mess'
+    echo "WARNING: Using MAKEFLAGS=${MAKEFLAGS}"
+    echo 'WARNING: A maximum of 3x the number of threads above will be used'
     pipelinebuild
 fi
 
 echo '===== BOINC build for all platforms done ====='
 . ./unset_env.sh
+
+echo 'If you are cross compiling on WSL, copy the binaries from'
+echo 'src/boinc*/android/BOINC/app/src/main/assets'
+echo 'to your directory that can be accessible by Android Studio'
