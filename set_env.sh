@@ -92,12 +92,13 @@ export READELF="${TARGET}-readelf"
 export SIZE="${TARGET}-size"
 export STRIP="${TARGET}-strip"
 export STRINGS="${TARGET}-strings"
-export SYSROOT="${TOOLCHAIN}/sysroot" # no longer needed for newer NDK
+#export SYSROOT="${TOOLCHAIN}/sysroot" # no longer needed for newer NDK
 
 # arm vfpv3-d16 fix (disable NEON)
 if [ "$ARCH" = 'arm' ]; then
     export CFLAGS="${CFLAGS} -mfloat-abi=softfp -mfpu=vfpv3-d16"
     export CXXFLAGS="${CXXFLAGS} -mfloat-abi=softfp -mfpu=vfpv3-d16"
+    export ASMFLAGS="${ASMFLAGS} -mfloat-abi=softfp -mfpu=vfpv3-d16" # OpenSSL has .asm, set it just to be sure
 fi
 
 # Set optimization level
@@ -105,10 +106,15 @@ if [ -z "$APP_DEBUG" ]; then
     # Release
     export CFLAGS="${CFLAGS} -Os"
     export CXXFLAGS="${CXXFLAGS} -Os"
+    export ASMFLAGS="${ASMFLAGS} -Os"
+    #export CFLAGS="${CFLAGS} -O2 -flto"
+    #export CXXFLAGS="${CXXFLAGS} -O2 -flto"
+    #export ASMFLAGS="${ASMFLAGS} -O2 -flto"
 else
     # Debug
     export CFLAGS="${CFLAGS} -O1"
     export CXXFLAGS="${CXXFLAGS} -O1"
+    export ASMFLAGS="${ASMFLAGS} -O1"
 fi
 
 ##### OpenSSL #####
@@ -126,7 +132,7 @@ export OPENSSL_ARGS="android-${ARCH_SSL} no-shared no-dso -D__ANDROID_API__=${AP
 ##### curl #####
 # curl/INSTALL.md
 export CURL_DIR="${PWD}/buildcache/libcurl-${ARCH}-${API}"
-export CURL_ARGS="--host=${TARGET} --with-pic --disable-shared --with-ssl=${OPENSSL_DIR} --with-sysroot=${SYSROOT} --prefix=${CURL_DIR}"
+export CURL_ARGS="--host=${TARGET} --with-pic --disable-shared --with-ssl=${OPENSSL_DIR} --prefix=${CURL_DIR}" #--with-sysroot=${SYSROOT}
 
 ##### BOINC #####
 # https://boinc.berkeley.edu/trac/wiki/BuildSystem
@@ -135,7 +141,7 @@ case "$ARCH" in
         export BOINC_ARGS_EXTRA='--disable-largefile'
         ;;
 esac
-export BOINC_DEPS="--with-ssl=${OPENSSL_DIR}  --with-libcurl=${CURL_DIR} --with-sysroot=${SYSROOT}"
+export BOINC_DEPS="--with-ssl=${OPENSSL_DIR}  --with-libcurl=${CURL_DIR}" #--with-sysroot=${SYSROOT}
 export BOINC_ARGS="--host=${TARGET} --disable-server --disable-manager --disable-shared ${BOINC_DEPS} ${BOINC_ARGS_EXTRA}"
 if [ -n "$APP_DEBUG" ]; then
     # Debug
