@@ -31,6 +31,8 @@ fi
 
 ##### Build #####
 
+echo '===== proot build for all platforms start ====='
+
 build() {
     LIBTALLOC_DIR="${REPO_DIR}/buildcache/libtalloc-${ARCH}-${API}"
 
@@ -114,7 +116,9 @@ for arch in aarch64 arm x86_64 x86; do
     . ./unset_env.sh
 done
 
-echo 'Static proot build for each architecture are done'
-echo 'Please go to the buildcache folder'
-echo 'and copy the proot binaries to their respective architecture'
-echo 'in boinc assets folder'
+echo '===== proot build for all platforms done ====='
+
+# Adding proot support to BOINC is experimental and require patches
+#echo 'Please go to the buildcache folder'
+#echo 'and copy the proot binaries to their respective architecture'
+#echo 'in boinc assets folder'
