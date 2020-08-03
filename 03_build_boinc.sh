@@ -37,8 +37,9 @@ if [ -e ./Makefile ] && grep -q '^distclean:' ./Makefile; then
 fi
 
 # Unfortunately BOINC ./configure is not intelligent in setting FLAGS for Android
-export CFLAGS="${CFLAGS} -DANDROID -DDECLARE_TIMEZONE"
-export CXXFLAGS="${CXXFLAGS} -DANDROID -DDECLARE_TIMEZONE"
+# In the future test remove -DANDROID workaround
+export CFLAGS="${CFLAGS} -DANDROID"
+export CXXFLAGS="${CXXFLAGS} -DANDROID"
 export LDFLAGS="-llog -latomic -static-libstdc++ -L${OPENSSL_DIR}/lib"
 
 ./_autosetup
@@ -61,7 +62,3 @@ cp -fv "${BOINC}/win_build/installerv2/redist/all_projects_list.xml" "BOINC/app/
 cp -fv "${BOINC}/curl/ca-bundle.crt" "BOINC/app/src/main/assets/ca-bundle.crt"
 
 echo "===== BOINC ${BOINC_VER:-unknown} build for ${TARGET} (${ABI}) done ====="
-
-echo 'If you are cross compiling on WSL, copy the binaries from'
-echo "${BOINC}/android/BOINC/app/src/main/assets"
-echo 'to your directory that can be accessible by Android Studio'
