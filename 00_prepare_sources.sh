@@ -58,4 +58,5 @@ else
 fi
 
 echo '===== Prepare sources done ====='
+cd ..
 . ./unset_env.sh
