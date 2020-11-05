@@ -141,7 +141,7 @@ if [ "$1" != 'pipeline' ]; then
 else
     echo 'WARNING: Building in pipeline (Experimental)'
     echo 'WARNING: Expect console output mess'
-    echo "WARNING: Using MAKEFLAGS=${MAKEFLAGS}"
+    echo "WARNING: Using MAKEFLAGS=${MAKEFLAGS:-j2}"
     echo 'WARNING: A maximum of 3x the number of threads above will be used'
     pipelinebuild
 fi
