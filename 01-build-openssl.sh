@@ -1,9 +1,9 @@
 #!/bin/sh
 set -e
 
-if [ ! -d "$ANDROID_NDK_ROOT" ] || [ ! -d "$ANDROID_NDK_HOME" ]; then
-    echo "ANDROID_NDK_ROOT=${ANDROID_NDK_ROOT}"
-    echo "ANDROID_NDK_HOME=${ANDROID_NDK_HOME}"
+if [ ! -d "$ANDROID_NDK_ROOT" ] && [ ! -d "$ANDROID_NDK_HOME" ]; then
+    echo "ANDROID_NDK_ROOT=${ANDROID_NDK_ROOT}" # OpenSSL 3
+    echo "ANDROID_NDK_HOME=${ANDROID_NDK_HOME}" # OpenSSL 1.1.1
     echo 'Invalid path detected! OpenSSL build stopped!'
     exit 1
 fi

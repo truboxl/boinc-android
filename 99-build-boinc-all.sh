@@ -1,32 +1,32 @@
 #!/bin/sh
 set -e
 
-# Temporarily set the API version here, defaults are:
+# temporarily set the API version here, defaults are:
 #API64=21
 #API32=16
 API64=21
 API32=16
 
 build() {
-    ./01_build_openssl.sh
-    ./02_build_curl.sh
-    ./03_build_boinc.sh
+    ./01-build-openssl.sh
+    ./02-build-curl.sh
+    ./03-build-boinc.sh
 }
 
 normalbuild() {
     for hostarch in aarch64 x86_64; do
-        . ./unset_env.sh
+        . ./unset-env.sh
         ARCH="$hostarch"
         API="$API64"
-        . ./set_env.sh
+        . ./set-env.sh
         build
     done
 
     for hostarch in arm x86; do
-        . ./unset_env.sh
+        . ./unset-env.sh
         ARCH="$hostarch"
         API="$API32"
-        . ./set_env.sh
+        . ./set-env.sh
         build
     done
 }
@@ -38,98 +38,98 @@ pipelinebuild() {
     YLW='\033[0;33mBuilding'
 
     # T+1
-    . ./unset_env.sh
+    . ./unset-env.sh
     ARCH=aarch64
     API="$API64"
-    . ./set_env.sh
-    ./01_build_openssl.sh 2>&1 > /dev/null &
+    . ./set-env.sh
+    ./01-build-openssl.sh 2>/dev/null >/dev/null &
     echo -e "${YLW} ${ARCH} openssl${RST}"
     wait
 
     # T+2
-    . ./unset_env.sh
+    . ./unset-env.sh
     ARCH=aarch64
     API="$API64"
-    . ./set_env.sh
-    ./02_build_curl.sh 2>&1 > /dev/null &
+    . ./set-env.sh
+    ./02-build-curl.sh 2>/dev/null >/dev/null &
     echo -e "${YLW} ${ARCH} curl${RST}"
 
-    . ./unset_env.sh
+    . ./unset-env.sh
     ARCH=x86_64
     API="$API64"
-    . ./set_env.sh
-    ./01_build_openssl.sh 2>&1 > /dev/null &
+    . ./set-env.sh
+    ./01-build-openssl.sh 2>/dev/null >/dev/null &
     echo -e "${YLW} ${ARCH} openssl${RST}"
     wait
 
     # T+3
-    . ./unset_env.sh
+    . ./unset-env.sh
     ARCH=aarch64
     API="$API64"
-    . ./set_env.sh
-    ./03_build_boinc.sh 2>&1 > /dev/null &
+    . ./set-env.sh
+    ./03-build-boinc.sh 2>/dev/null >/dev/null &
     echo -e "${YLW} ${ARCH} boinc${RST}"
 
-    . ./unset_env.sh
+    . ./unset-env.sh
     ARCH=x86_64
     API="$API64"
-    . ./set_env.sh
-    ./02_build_curl.sh 2>&1 > /dev/null &
+    . ./set-env.sh
+    ./02-build-curl.sh 2>/dev/null >/dev/null &
     echo -e "${YLW} ${ARCH} curl${RST}"
 
-    . ./unset_env.sh
+    . ./unset-env.sh
     ARCH=arm
     API="$API32"
-    . ./set_env.sh
-    ./01_build_openssl.sh 2>&1 > /dev/null &
+    . ./set-env.sh
+    ./01-build-openssl.sh 2>/dev/null >/dev/null &
     echo -e "${YLW} ${ARCH} openssl${RST}"
     wait
 
     # T+4
-    . ./unset_env.sh
+    . ./unset-env.sh
     ARCH=x86_64
     API="$API64"
-    . ./set_env.sh
-    ./03_build_boinc.sh 2>&1 > /dev/null &
+    . ./set-env.sh
+    ./03-build-boinc.sh 2>/dev/null >/dev/null &
     echo -e "${YLW} ${ARCH} boinc${RST}"
 
-    . ./unset_env.sh
+    . ./unset-env.sh
     ARCH=arm
     API="$API32"
-    . ./set_env.sh
-    ./02_build_curl.sh 2>&1 > /dev/null &
+    . ./set-env.sh
+    ./02-build-curl.sh 2>/dev/null >/dev/null &
     echo -e "${YLW} ${ARCH} curl${RST}"
 
-    . ./unset_env.sh
+    . ./unset-env.sh
     ARCH=x86
     API="$API32"
-    . ./set_env.sh
-    ./01_build_openssl.sh 2>&1 > /dev/null &
+    . ./set-env.sh
+    ./01-build-openssl.sh 2>/dev/null >/dev/null &
     echo -e "${YLW} ${ARCH} openssl${RST}"
     wait
 
     # T+5
-    . ./unset_env.sh
+    . ./unset-env.sh
     ARCH=arm
     API="$API32"
-    . ./set_env.sh
-    ./03_build_boinc.sh 2>&1 > /dev/null &
+    . ./set-env.sh
+    ./03-build-boinc.sh 2>/dev/null >/dev/null &
     echo -e "${YLW} ${ARCH} boinc${RST}"
 
-    . ./unset_env.sh
+    . ./unset-env.sh
     ARCH=x86
     API="$API32"
-    . ./set_env.sh
-    ./02_build_curl.sh 2>&1 > /dev/null &
+    . ./set-env.sh
+    ./02-build-curl.sh 2>/dev/null >/dev/null &
     echo -e "${YLW} ${ARCH} curl${RST}"
     wait
 
     # T+6
-    . ./unset_env.sh
+    . ./unset-env.sh
     ARCH=x86
     API="$API32"
-    . ./set_env.sh
-    ./03_build_boinc.sh 2>&1 > /dev/null &
+    . ./set-env.sh
+    ./03-build-boinc.sh 2>/dev/null >/dev/null &
     echo -e "${YLW} ${ARCH} boinc${RST}"
     wait
 }
@@ -139,15 +139,14 @@ echo '===== BOINC build for all platforms start ====='
 if [ "$1" != 'pipeline' ]; then
     normalbuild
 else
-    echo 'WARNING: Building in pipeline (Experimental)'
-    echo 'WARNING: Expect console output mess'
-    echo "WARNING: Using MAKEFLAGS=${MAKEFLAGS:-j2}"
-    echo 'WARNING: A maximum of 3x the number of threads above will be used'
+    echo 'WARN: Building in pipeline (Experimental)'
+    echo "WARN: Using MAKEFLAGS=${MAKEFLAGS:--j2}"
+    echo 'WARN: A maximum of 3x the number of threads above will be used'
     pipelinebuild
 fi
 
 echo '===== BOINC build for all platforms done ====='
-. ./unset_env.sh
+. ./unset-env.sh
 
 echo 'If you are cross compiling on WSL, copy the binaries from'
 echo 'src/boinc*/android/BOINC/app/src/main/assets'

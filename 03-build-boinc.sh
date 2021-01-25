@@ -36,8 +36,9 @@ if [ -e ./Makefile ] && grep -q '^distclean:' ./Makefile; then
     make distclean -s
 fi
 
-# Unfortunately BOINC ./configure is not intelligent in setting FLAGS for Android
-# In the future test remove -DANDROID workaround
+# unfortunately BOINC ./configure is not intelligent in setting FLAGS for
+# Android
+# in the future test remove -DANDROID workaround
 export CFLAGS="${CFLAGS} -DANDROID"
 export CXXFLAGS="${CXXFLAGS} -DANDROID"
 export LDFLAGS="-llog -latomic -static-libstdc++ -L${OPENSSL_DIR}/lib"
@@ -48,10 +49,12 @@ make -s
 make stage -s
 
 if [ -z "$APP_DEBUG" ]; then
-    # Release
+    # release
     echo 'Stripping binaries'
     cd "${BOINC}/stage/usr/local/bin"
+    du ./*
     "$STRIP" -v ./*
+    du ./*
 fi
 
 echo 'Copying assets'

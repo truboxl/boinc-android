@@ -1,14 +1,14 @@
 #!/bin/sh
-# With modification from Termux own build scripts
+# with modification from Termux own build scripts
 # https://github.com/termux/termux-packages/blob/master/packages/libtalloc/build.sh
 # https://github.com/termux/termux-packages/blob/master/packages/proot/build.sh
 #
-# Original proot can be found at https://github.com/proot-me/proot
+# original proot can be found at https://github.com/proot-me/proot
 #
-# Note we are using Termux fork of proot for Android compatibility
+# note we are using Termux fork of proot for Android compatibility
 # https://github.com/termux/proot
 #
-# Requires at least API=23 but breaks at targetSdkVersion 29
+# requires at least API=23 but breaks at targetSdkVersion 29
 set -e
 
 REPO_DIR="$PWD"
@@ -16,7 +16,7 @@ REPO_DIR="$PWD"
 mkdir -p "$REPO_DIR/src/"
 cd "$REPO_DIR/src/"
 
-##### Prepare sources #####
+##### prepare sources #####
 
 echo 'Preparing libtalloc 2.3.1 sources'
 curl -#LOC - https://www.samba.org/ftp/talloc/talloc-2.3.1.tar.gz
@@ -29,7 +29,7 @@ else
     git clone https://github.com/termux/proot
 fi
 
-##### Build #####
+##### build #####
 
 echo '===== proot build for all platforms start ====='
 
@@ -103,22 +103,20 @@ EOF
     echo "===== proot build for ${TARGET} (${ABI}) done ====="
 }
 
-##### Main script #####
+##### main script #####
 
 cd "$REPO_DIR"
 
 for arch in aarch64 arm x86_64 x86; do
     API=23
     ARCH="$arch"
-    . ./set_env.sh
+    . ./set-env.sh
     build
     cd "$REPO_DIR"
-    . ./unset_env.sh
+    . ./unset-env.sh
 done
 
 echo '===== proot build for all platforms done ====='
 
-# Adding proot support to BOINC is experimental and require patches
-#echo 'Please go to the buildcache folder'
-#echo 'and copy the proot binaries to their respective architecture'
-#echo 'in boinc assets folder'
+# adding proot support to BOINC is experimental and require patches
+# patches are available at truboxl/boinc-termux-client

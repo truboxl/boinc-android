@@ -345,4 +345,3 @@ fi
 if [ $COMPILE_BOINC == "yes" ]; then
     compile_boinc
 fi
-
