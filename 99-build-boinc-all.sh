@@ -31,13 +31,15 @@ normalbuild() {
     done
 }
 
-# Experimental, theoretically faster
+# experimental, theoretically faster, uses 1.5x all CPUs
 pipelinebuild() {
-
     RST='\033[0m'
     YLW='\033[0;33mBuilding'
+    CPU="$(nproc)*3/2"
 
     # T+1
+    export MAKEFLAGS="-j$(($CPU))"
+    echo $MAKEFLAGS
     . ./unset-env.sh
     ARCH=aarch64
     API="$API64"
@@ -47,6 +49,8 @@ pipelinebuild() {
     wait
 
     # T+2
+    export MAKEFLAGS="-j$(($CPU/2))"
+    echo $MAKEFLAGS
     . ./unset-env.sh
     ARCH=aarch64
     API="$API64"
@@ -63,6 +67,8 @@ pipelinebuild() {
     wait
 
     # T+3
+    export MAKEFLAGS="-j$(($CPU/3))"
+    echo $MAKEFLAGS
     . ./unset-env.sh
     ARCH=aarch64
     API="$API64"
@@ -86,6 +92,8 @@ pipelinebuild() {
     wait
 
     # T+4
+    export MAKEFLAGS="-j$(($CPU/3))"
+    echo $MAKEFLAGS
     . ./unset-env.sh
     ARCH=x86_64
     API="$API64"
@@ -109,6 +117,8 @@ pipelinebuild() {
     wait
 
     # T+5
+    export MAKEFLAGS="-j$(($CPU/2))"
+    echo $MAKEFLAGS
     . ./unset-env.sh
     ARCH=arm
     API="$API32"
@@ -125,6 +135,8 @@ pipelinebuild() {
     wait
 
     # T+6
+    export MAKEFLAGS="-j$(($CPU))"
+    echo $MAKEFLAGS
     . ./unset-env.sh
     ARCH=x86
     API="$API32"
@@ -140,8 +152,7 @@ if [ "$1" != 'pipeline' ]; then
     normalbuild
 else
     echo 'WARN: Building in pipeline (Experimental)'
-    echo "WARN: Using MAKEFLAGS=${MAKEFLAGS:--j2}"
-    echo 'WARN: A maximum of 3x the number of threads above will be used'
+    echo "WARN: Up to a maximum of $(($(nproc)*3/2)) threads will be used"
     pipelinebuild
 fi
 

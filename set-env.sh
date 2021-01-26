@@ -7,7 +7,7 @@ export OPENSSL_VER=1.1.1i
 export CURL_VER=7.74.0
 export NDK_VER=r21d
 
-# make
+# default MAKEFLAGS, not applicable for pipelinebuild
 export MAKEFLAGS="${MAKEFLAGS:--j2}"
 
 ##### Android NDK #####
