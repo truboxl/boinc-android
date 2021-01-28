@@ -31,4 +31,13 @@
 1. Run `./00-clean-buildcache.sh`
 1. Run `. ./unset-env.sh`
 
-### Note: Long term should look into directly build from Android Studio if possible
+## Benchmark
+
+This has unofficially become a personal benchmark tool and research topic for testing compilation
+across different computers. The benchmark tests CPU overcommit (at 150%) and I/O. Instead of
+running `./99-build-boinc-all.sh`, use `./99-build-boinc-all.sh pipeline` to run compile jobs
+concurrently. Use `time` command to measure.
+
+## Long term
+
+Look into directly build from Android Studio if possible
