@@ -34,9 +34,9 @@
 ## Benchmark
 
 This has unofficially become a personal benchmark tool and research topic for testing compilation
-across different computers. The benchmark tests CPU overcommit (at 150%) and I/O. Instead of
-running `./99-build-boinc-all.sh`, use `./99-build-boinc-all.sh pipeline` to run compile jobs
-concurrently. Use `time` command to measure.
+across different computers. The benchmark tests CPU overcommit and I/O. Instead of running
+`./99-build-boinc-all.sh`, use `./99-build-boinc-all.sh pipeline` to run compile jobs concurrently.
+Use `time` command to measure.
 
 ## Long term
 

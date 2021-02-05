@@ -31,11 +31,13 @@ normalbuild() {
     done
 }
 
-# experimental, theoretically faster, uses 1.5x all CPUs
+# experimental, theoretically faster, uses all CPUs + 2
+# minimum 3 jobs
+# nproc command guarantees > 0
 pipelinebuild() {
     RST='\033[0m'
     YLW='\033[0;33mBuilding'
-    CPU="$(nproc)*3/2"
+    CPU="$(nproc)+2"
 
     # T+1
     export MAKEFLAGS="-j$(($CPU))"
@@ -152,7 +154,7 @@ if [ "$1" != 'pipeline' ]; then
     normalbuild
 else
     echo 'WARN: Building in pipeline (Experimental)'
-    echo "WARN: Up to a maximum of $(($(nproc)*3/2)) threads will be used"
+    echo "WARN: Up to a maximum of $(($(nproc)+2)) threads will be used"
     pipelinebuild
 fi
 
