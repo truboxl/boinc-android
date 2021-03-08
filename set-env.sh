@@ -3,9 +3,9 @@
 # default of this script is ARCH=aarch64; API=21 but can be overriden
 
 # sources version
-export OPENSSL_VER=1.1.1i
-export CURL_VER=7.74.0
-export NDK_VER=r21d
+export OPENSSL_VER=1.1.1j
+export CURL_VER=7.75.0
+export NDK_VER=r21e
 
 # default MAKEFLAGS, not applicable for pipelinebuild
 export MAKEFLAGS="${MAKEFLAGS:--j2}"

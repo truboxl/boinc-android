@@ -8,12 +8,12 @@ cd "${PWD}/src/" || exit 1
 
 echo "Preparing OpenSSL ${OPENSSL_VER} sources"
 #git clone 'https://github.com/openssl/openssl' # OpenSSL 3 is broken for Android
-curl -#OC - "https://www.openssl.org/source/openssl-${OPENSSL_VER}.tar.gz"
+curl -#LOC - "https://www.openssl.org/source/openssl-${OPENSSL_VER}.tar.gz"
 tar xf "openssl-${OPENSSL_VER}.tar.gz"
 
 echo "Preparing curl ${CURL_VER} sources"
 #git clone 'https://github.com/curl/curl'
-curl -#OC - "https://curl.haxx.se/download/curl-${CURL_VER}.tar.xz"
+curl -#LOC - "https://curl.haxx.se/download/curl-${CURL_VER}.tar.xz"
 tar xf "curl-${CURL_VER}.tar.xz"
 
 echo "Preparing Android NDK ${NDK_VER}"
@@ -34,7 +34,7 @@ esac
 
 # if you have already downloaded Android NDK
 # please edit $NDK at ./set-env.sh and comment the lines here
-curl -#OC - "https://dl.google.com/android/repository/android-ndk-${NDK_VER}-${HOST_TAG}.zip"
+curl -#LOC - "https://dl.google.com/android/repository/android-ndk-${NDK_VER}-${HOST_TAG}.zip"
 unzip -oq "android-ndk-${NDK_VER}-${HOST_TAG}.zip"
 
 # EXPERIMENTAL BUILD ON WINDOWS
