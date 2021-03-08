@@ -154,7 +154,7 @@ if [ "$1" != 'pipeline' ]; then
     normalbuild
 else
     echo 'WARN: Building in pipeline (Experimental)'
-    echo "WARN: Up to a maximum of $(($(nproc)+2)) threads will be used"
+    echo "WARN: Up to a maximum of $(($(nproc)*2)) threads will be used"
     pipelinebuild
 fi
 
